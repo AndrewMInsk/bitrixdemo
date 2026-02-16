@@ -61,9 +61,47 @@ use Bitrix\Main\Page\Asset;
 
    </div>
 
-
-
-
+<!-- Модальное окно для формы "Заказать звонок" -->
+<div class="modal fade" id="callbackModal" tabindex="-1" role="dialog" aria-labelledby="callbackModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="callbackModalLabel">Заказать звонок</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <?$APPLICATION->IncludeComponent(
+          "bitrix:form.result.new",
+          "",
+          Array(
+            "WEB_FORM_ID" => "1",
+            "IGNORE_CUSTOM_TEMPLATE" => "N",
+            "USE_EXTENDED_ERRORS" => "Y",
+            "SEF_MODE" => "N",
+            "CACHE_TYPE" => "A",
+                  "AJAX_MODE" => "Y",  // режим AJAX
+                  "AJAX_OPTION_SHADOW" => "N", // затемнять область
+                  "AJAX_OPTION_JUMP" => "N", // скроллить страницу до компонента
+                  "AJAX_OPTION_STYLE" => "Y", // подключать стили
+                  "AJAX_OPTION_HISTORY" => "N",
+            "CACHE_TIME" => "3600",
+            "LIST_URL" => "",
+            "EDIT_URL" => "",
+            "SUCCESS_URL" => "",
+            "CHAIN_ITEM_TEXT" => "",
+            "CHAIN_ITEM_LINK" => "",
+            "VARIABLE_ALIASES" => array(
+              "WEB_FORM_ID" => "WEB_FORM_ID",
+              "RESULT_ID" => "RESULT_ID",
+            )
+          )
+        );?>
+      </div>
+    </div>
+  </div>
+</div>
 
  <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
        <?Asset::getInstance()->addJs('https://api-maps.yandex.ru/2.1/?lang=ru_RU');?>

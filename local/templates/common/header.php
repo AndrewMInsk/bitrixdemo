@@ -16,7 +16,7 @@ CModule::IncludeModule('iblock');
     Asset::getInstance()->addCss(ASSETS_DIR . '/assets/stylesheets/bootstrap.min.css');
     Asset::getInstance()->addCss(ASSETS_DIR . '/assets/stylesheets/screen.css');
     Asset::getInstance()->addCss(ASSETS_DIR . '/slick/slick.css');
-
+    Asset::getInstance()->addCss(ASSETS_DIR . '/assets/stylesheets/custom.css');
     
     ?>
 </head>

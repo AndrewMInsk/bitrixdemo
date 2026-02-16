@@ -7,5 +7,9 @@ jQuery(document).ready(function($) {
       dots: false
     });
   });
-
+  console.log('go');
+  $('.call.upper').on('click', function(e) {
+    e.preventDefault();
+    $('#callbackModal').modal('show');
+  });
 });
