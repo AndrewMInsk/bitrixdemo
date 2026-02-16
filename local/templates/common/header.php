@@ -32,7 +32,9 @@ CModule::IncludeModule('iblock');
             $banner = ASSETS_DIR . "/img/page-1-banner.png";
         }
         ?>
+        <?if($APPLICATION->GetCurPage() != '/'):?>
         <img src="<?=$banner?>" class="banner">
+        <?endif?>
       <header>
         <div class="container">
           <div class="row">
@@ -145,12 +147,22 @@ CModule::IncludeModule('iblock');
       <div class="container">
         <div class="page-content">
           <div class="sidebar-left upper">
-            <ul>
-              <li><a href="#">аренда<br>строительных лесов</a></li>
-              <li class="active"><a href="#">продажа<br>строительных лесов</a></li>
-              <li><a href="#">леса<br>строительные б/у</a></li>
-              <li><a href="#">аренда вышки туры</a></li>
-            </ul>
+            <?$APPLICATION->IncludeComponent(
+              "bitrix:menu",
+              "left",
+              Array(
+                "ROOT_MENU_TYPE" => "left",
+                "MENU_CACHE_TYPE" => "A",
+                "MENU_CACHE_TIME" => "3600",
+                "MENU_CACHE_USE_GROUPS" => "Y",
+                "MENU_CACHE_GET_VARS" => "",
+                "MAX_LEVEL" => "1",
+                "CHILD_MENU_TYPE" => "",
+                "USE_EXT" => "N",
+                "DELAY" => "N",
+                "ALLOW_MULTI_SELECT" => "N"
+              )
+            );?>
           </div>
 
           <div class="content-wrapper">
