@@ -31,16 +31,37 @@ CModule::IncludeModule('iblock');
             <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10 no-padding contacts-column">
               <div class="contact-content">
                 <div class="contacts-wrap address">
-                  <div class="title">Адрес</div>
-                  <div class="contact">г. Тула, ул. Октябрьская, 6</div>
+                  <?$APPLICATION->IncludeComponent(
+                    "bitrix:main.include",
+                    "",
+                    Array(
+                      "AREA_FILE_SHOW" => "file",
+                      "PATH" => SITE_DIR."include/address.php",
+                      "EDIT_TEMPLATE" => ""
+                    )
+                  );?>
                 </div>
                 <div class="contacts-wrap mail">
-                  <div class="title">Почта</div>
-                  <div class="contact">lesa71@mail.ru</div>
+                  <?$APPLICATION->IncludeComponent(
+                    "bitrix:main.include",
+                    "",
+                    Array(
+                      "AREA_FILE_SHOW" => "file",
+                      "PATH" => SITE_DIR."include/mail.php",
+                      "EDIT_TEMPLATE" => ""
+                    )
+                  );?>
                 </div>
                 <div class="contacts-wrap phone">
-                  <div class="title">Телефон</div>
-                  <div class="contact">+7 800 700-8000</div>
+                  <?$APPLICATION->IncludeComponent(
+                    "bitrix:main.include",
+                    "",
+                    Array(
+                      "AREA_FILE_SHOW" => "file",
+                      "PATH" => SITE_DIR."include/phone.php",
+                      "EDIT_TEMPLATE" => ""
+                    )
+                  );?>
                 </div>
               </div>
             </div>
