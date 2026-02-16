@@ -72,21 +72,28 @@ CModule::IncludeModule('iblock');
           <div class="row">
             <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 no-padding"><div class="logo">ЛЕСА<span>. 71</span></div></div>
             <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10 no-padding">
-              <menu>
-                <ul>
-                  <li><a href="#">Главная</a></li>
-                  <li><a href="#">О компании</a></li>
-                  <li class="active"><a href="#">Услуги и цены</a></li>
-                  <li><a href="#">Фотогалерея</a></li>
-                  <li><a href="#">Контакты</a></li>
-                </ul>
-              </menu>
+              <?$APPLICATION->IncludeComponent(
+                "bitrix:menu",
+                "top_menu",
+                Array(
+                  "ROOT_MENU_TYPE" => "top",
+                  "MAX_LEVEL" => "1",
+                  "CHILD_MENU_TYPE" => "left",
+                  "USE_EXT" => "N",
+                  "DELAY" => "N",
+                  "ALLOW_MULTI_SELECT" => "N",
+                  "MENU_CACHE_TYPE" => "A",
+                  "MENU_CACHE_TIME" => "3600",
+                  "MENU_CACHE_USE_GROUPS" => "Y",
+                  "MENU_CACHE_GET_VARS" => ""
+                )
+              );?>
             </div>
           </div>
         </div>
       </header>
 
-
+      <?if($APPLICATION->GetCurPage() == '/'):?>
       <div class="slider">
         <div>
           <img src="<?=ASSETS_DIR?>/img/slide-1.png" />
@@ -116,6 +123,17 @@ CModule::IncludeModule('iblock');
           </div>
         </div>
       </div>
+      <?else:?>
+          <div class="breadcrumbs">
+              <div class="container">
+                  <ul>
+                      <li><a href="#">Главная</a></li>
+                      <li><a href="#">Услуги и цены</a></li>
+                      <li>Продажа строительных лесов</li>
+                  </ul>
+              </div>
+          </div>
+      <?endif;?>
       <div class="container">
         <div class="page-content">
           <div class="sidebar-left upper">
