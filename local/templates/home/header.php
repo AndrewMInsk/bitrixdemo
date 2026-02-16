@@ -1,0 +1,2 @@
+<?require($_SERVER["DOCUMENT_ROOT"]."/local/templates/common/header.php");?>
+       
