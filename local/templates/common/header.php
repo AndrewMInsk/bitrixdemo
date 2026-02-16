@@ -33,7 +33,7 @@ CModule::IncludeModule('iblock');
         }
         ?>
         <?if($APPLICATION->GetCurPage() != '/'):?>
-        <img src="<?=$banner?>" class="banner">
+        <img src="<?=ASSETS_DIR .'/'. $banner?>" class="banner">
         <?endif?>
       <header>
         <div class="container">
@@ -149,7 +149,7 @@ CModule::IncludeModule('iblock');
           <div class="sidebar-left upper">
             <?$APPLICATION->IncludeComponent(
               "bitrix:menu",
-              "left",
+              "leftmenu",
               Array(
                 "ROOT_MENU_TYPE" => "left",
                 "MENU_CACHE_TYPE" => "A",

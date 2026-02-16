@@ -23,32 +23,60 @@ use Bitrix\Main\Page\Asset;
             <div class="row">
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 no-padding"><div class="logo">ЛЕСА<span>. 71</span></div></div>
               <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10 no-padding">
-                <menu>
-                  <ul>
-                    <li><a href="#">Главная</a></li>
-                    <li><a href="#">О компании</a></li>
-                    <li class="active"><a href="#">Услуги и цены</a></li>
-                    <li><a href="#">Фотогалерея</a></li>
-                    <li><a href="#">Контакты</a></li>
-                  </ul>
-                </menu>
+                  <?$APPLICATION->IncludeComponent(
+                          "bitrix:menu",
+                          "topmenu",
+                          Array(
+                                  "ROOT_MENU_TYPE" => "top",
+                                  "MAX_LEVEL" => "2",
+                                  "CHILD_MENU_TYPE" => "left",
+                                  "USE_EXT" => "N",
+                                  "DELAY" => "N",
+                                  "ALLOW_MULTI_SELECT" => "N",
+                                  "MENU_CACHE_TYPE" => "A",
+                                  "MENU_CACHE_TIME" => "3600",
+                                  "MENU_CACHE_USE_GROUPS" => "Y",
+                                  "MENU_CACHE_GET_VARS" => ""
+                          )
+                  );?>
               </div>
             </div>
             <div class="row">
               <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10 no-padding contacts-column">
                 <div class="contact-content">
-                  <div class="contacts-wrap address">
-                    <div class="title">Адрес</div>
-                    <div class="contact">г. Тула, ул. Октябрьская, 6</div>
-                  </div>
-                  <div class="contacts-wrap mail">
-                    <div class="title">Почта</div>
-                    <div class="contact">lesa71@mail.ru</div>
-                  </div>
-                  <div class="contacts-wrap phone">
-                    <div class="title">Телефон</div>
-                    <div class="contact">+7 800 700-8000</div>
-                  </div>
+                    <div class="contacts-wrap address">
+                        <?$APPLICATION->IncludeComponent(
+                                "bitrix:main.include",
+                                "",
+                                Array(
+                                        "AREA_FILE_SHOW" => "file",
+                                        "PATH" => SITE_DIR."include/address.php",
+                                        "EDIT_TEMPLATE" => ""
+                                )
+                        );?>
+                    </div>
+                    <div class="contacts-wrap mail">
+                        <?$APPLICATION->IncludeComponent(
+                                "bitrix:main.include",
+                                "",
+                                Array(
+                                        "AREA_FILE_SHOW" => "file",
+                                        "PATH" => SITE_DIR."include/mail.php",
+                                        "EDIT_TEMPLATE" => ""
+                                )
+                        );?>
+                    </div>
+                    <div class="contacts-wrap phone">
+                        <?$APPLICATION->IncludeComponent(
+                                "bitrix:main.include",
+                                "",
+                                Array(
+                                        "AREA_FILE_SHOW" => "file",
+                                        "PATH" => SITE_DIR."include/phone.php",
+                                        "EDIT_TEMPLATE" => ""
+                                )
+                        );?>
+                    </div>
                 </div>
               </div>
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2 no-padding call-column">

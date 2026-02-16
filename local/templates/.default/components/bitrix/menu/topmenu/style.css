@@ -1,0 +1,13 @@
+
+.has-child ul {display: none;}
+.submenu {    position: absolute;
+    left: 20px;
+    right: 20px;    padding: 0 20px;
+    width: 100%;
+    background: #3d3939d6;
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;}
+.has-child:hover ul {display: flex;    opacity: 1;
+    visibility: visible;}
