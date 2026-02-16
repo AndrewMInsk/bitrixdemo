@@ -74,18 +74,18 @@ use Bitrix\Main\Page\Asset;
       <div class="modal-body">
         <?$APPLICATION->IncludeComponent(
           "bitrix:form.result.new",
-          "",
+          "callback",
           Array(
             "WEB_FORM_ID" => "1",
             "IGNORE_CUSTOM_TEMPLATE" => "N",
             "USE_EXTENDED_ERRORS" => "Y",
             "SEF_MODE" => "N",
             "CACHE_TYPE" => "A",
-                  "AJAX_MODE" => "Y",  // режим AJAX
-                  "AJAX_OPTION_SHADOW" => "N", // затемнять область
-                  "AJAX_OPTION_JUMP" => "N", // скроллить страницу до компонента
-                  "AJAX_OPTION_STYLE" => "Y", // подключать стили
-                  "AJAX_OPTION_HISTORY" => "N",
+          "AJAX_MODE" => "Y",
+          "AJAX_OPTION_SHADOW" => "N",
+          "AJAX_OPTION_JUMP" => "N",
+          "AJAX_OPTION_STYLE" => "Y",
+          "AJAX_OPTION_HISTORY" => "N",
             "CACHE_TIME" => "3600",
             "LIST_URL" => "",
             "EDIT_URL" => "",
