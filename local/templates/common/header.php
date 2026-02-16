@@ -23,8 +23,16 @@ CModule::IncludeModule('iblock');
 <body>
 <div id="panel"><? $APPLICATION->ShowPanel(); ?></div>
 
-    <div class="page">
-
+    <div class="page<?if($APPLICATION->GetCurPage() != '/'):?> inner<?endif?>">
+        <?php
+        // Получаем свойство баннера текущего раздела
+        $banner = $APPLICATION->GetDirProperty("BANNER_IMAGE");
+        // Если свойство не задано, используем баннер по умолчанию
+        if (empty($banner)) {
+            $banner = ASSETS_DIR . "/img/page-1-banner.png";
+        }
+        ?>
+        <img src="<?=$banner?>" class="banner">
       <header>
         <div class="container">
           <div class="row">
@@ -74,10 +82,10 @@ CModule::IncludeModule('iblock');
             <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xl-10 no-padding">
               <?$APPLICATION->IncludeComponent(
                 "bitrix:menu",
-                "top_menu",
+                "topmenu",
                 Array(
                   "ROOT_MENU_TYPE" => "top",
-                  "MAX_LEVEL" => "1",
+                  "MAX_LEVEL" => "2",
                   "CHILD_MENU_TYPE" => "left",
                   "USE_EXT" => "N",
                   "DELAY" => "N",
