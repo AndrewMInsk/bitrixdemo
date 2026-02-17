@@ -137,9 +137,15 @@ CModule::IncludeModule('iblock');
           <div class="breadcrumbs">
               <div class="container">
                   <ul>
-                      <li><a href="#">Главная</a></li>
-                      <li><a href="#">Услуги и цены</a></li>
-                      <li>Продажа строительных лесов</li>
+                      <?$APPLICATION->IncludeComponent(
+                          "bitrix:breadcrumb",
+                          "nav",
+                          Array(
+                              "START_FROM" => "0",
+                              "PATH" => "",
+                              "SITE_ID" => "s1"
+                          )
+                      );?>
                   </ul>
               </div>
           </div>
