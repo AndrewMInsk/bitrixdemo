@@ -25,9 +25,7 @@ CModule::IncludeModule('iblock');
 
     <div class="page<?if($APPLICATION->GetCurPage() != '/'):?> inner<?endif?>">
         <?php
-        // Получаем свойство баннера текущего раздела
         $banner = $APPLICATION->GetDirProperty("BANNER_IMAGE");
-        // Если свойство не задано, используем баннер по умолчанию
         if (empty($banner)) {
             $banner = ASSETS_DIR . "/img/page-1-banner.png";
         }
@@ -137,15 +135,13 @@ CModule::IncludeModule('iblock');
           <div class="breadcrumbs">
               <div class="container">
                   <ul>
-                      <?$APPLICATION->IncludeComponent(
-                          "bitrix:breadcrumb",
-                          "nav",
-                          Array(
-                              "START_FROM" => "0",
-                              "PATH" => "",
-                              "SITE_ID" => "s1"
-                          )
-                      );?>
+                      <?$APPLICATION->IncludeComponent("bitrix:breadcrumb", "template1", Array(
+	"START_FROM" => "0",	// Номер пункта, начиная с которого будет построена навигационная цепочка
+		"PATH" => "",	// Путь, для которого будет построена навигационная цепочка (по умолчанию, текущий путь)
+		"SITE_ID" => "s1",	// Cайт (устанавливается в случае многосайтовой версии, когда DOCUMENT_ROOT у сайтов разный)
+	),
+	false
+);?>
                   </ul>
               </div>
           </div>
