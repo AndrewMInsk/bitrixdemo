@@ -10,6 +10,9 @@ $arComponentParameters = array(
             'DEFAULT' => '',
         ),
         'CACHE_TIME' => array(
+            'NAME' => 'Время кеширования',
+            'TYPE' => 'STRING',
+            'MULTIPLE' => 'N',
             'DEFAULT' => '36000000',
         ),
     ),

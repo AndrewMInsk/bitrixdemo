@@ -6,29 +6,28 @@ use Bitrix\Main\Data\Cache;
 
 class NewsListComponent extends CBitrixComponent
 {
-    protected $cacheTime = 36000000;
-
     public static function clearCache($ID, $arFields)
     {
-        $cache = \Bitrix\Main\Data\Cache::createInstance();
-        $cache->cleanDir('/news/list');
+        $iblockId = isset($arFields['IBLOCK_ID']) ? intval($arFields['IBLOCK_ID']) : 0;
+        AddMessage2Log("ClearCache вызван", "news_cache_debug");
+
+        if ($iblockId > 0) {
+            $cacheTag = 'news_iblock_' . $iblockId;
+            
+            $taggedCache = \Bitrix\Main\Application::getInstance()->getTaggedCache();
+            $taggedCache->clearByTag($cacheTag);
+        }
     }
 
     public function onPrepareComponentParams($arParams)
     {
         $arParams['IBLOCK_ID'] = intval($arParams['IBLOCK_ID']);
+        $arParams['CACHE_TIME'] = isset($arParams['CACHE_TIME']) ? intval($arParams['CACHE_TIME']) : 36000000;
 
         return $arParams;
     }
 
-    protected function checkModules()
-    {
-        if (!Loader::includeModule('iblock')) {
-            ShowError('Модуль информационных блоков не установлен');
-            return false;
-        }
-        return true;
-    }
+
 
     public function getCacheID($additionalCacheID = false)
     {
@@ -39,8 +38,11 @@ class NewsListComponent extends CBitrixComponent
     {
         $cache = Cache::createInstance();
         $cacheID = $this->getCacheID();
+        $cachePath = '/news/list';
+        $cacheTag = 'news_iblock_' . $this->arParams['IBLOCK_ID'];
+        
         $result['CACHED'] = false;
-        if ($cache->initCache($this->cacheTime, $cacheID, '/news/list')) {
+        if ($cache->initCache($this->arParams['CACHE_TIME'], $cacheID, $cachePath)) {
             $result = $cache->getVars();
             $result['CACHED'] = true;
         } elseif ($cache->startDataCache()) {
@@ -102,6 +104,12 @@ class NewsListComponent extends CBitrixComponent
             $result['NAV_STRING'] = $res->GetPageNavStringEx($navComponentObject, 'Новости', '', false);
 
             $result['CACHED'] = false;
+            
+            $taggedCache = \Bitrix\Main\Application::getInstance()->getTaggedCache();
+            $taggedCache->startTagCache($cachePath);
+            $taggedCache->registerTag($cacheTag);
+            $taggedCache->endTagCache();
+            
             $cache->endDataCache($result);
         }
 
@@ -111,9 +119,7 @@ class NewsListComponent extends CBitrixComponent
     public function executeComponent()
     {
         try {
-            if (!$this->checkModules()) {
-                return;
-            }
+
 
             if (empty($this->arParams['IBLOCK_ID'])) {
                 ShowError('Необходимо указать ID инфоблока');
@@ -121,11 +127,6 @@ class NewsListComponent extends CBitrixComponent
             }
 
             $this->arResult = $this->getNewsList();
-
-            if (empty($this->arResult['ITEMS'])) {
-                $this->arResult['EMPTY'] = 'Y';
-            }
-
             $this->includeComponentTemplate();
         } catch (Exception $e) {
             ShowError($e->getMessage());
