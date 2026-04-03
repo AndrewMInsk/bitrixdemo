@@ -22,7 +22,7 @@ class NewsListComponent extends CBitrixComponent
     public function onPrepareComponentParams($arParams)
     {
         $arParams['IBLOCK_ID'] = intval($arParams['IBLOCK_ID']);
-        $arParams['CACHE_TIME'] = isset($arParams['CACHE_TIME']) ? intval($arParams['CACHE_TIME']) : 36000000;
+        $arParams['CACHE_TIME'] = isset($arParams['CACHE_TIME']) ? intval($arParams['CACHE_TIME']) : 3600;
 
         return $arParams;
     }
@@ -65,7 +65,6 @@ class NewsListComponent extends CBitrixComponent
                 'CHECK_PERMISSIONS' => 'Y'
             );
 
-            // Добавляем фильтр из GET-параметров
             if (!empty($_GET['date_from'])) {
                 $arFilter['>=DATE_ACTIVE_FROM'] = $_GET['date_from'];
             }
@@ -82,7 +81,6 @@ class NewsListComponent extends CBitrixComponent
             $res = CIBlockElement::GetList(
                 array(
                     'ACTIVE_FROM' => 'DESC',
-                    'SORT' => 'ASC'
                 ),
                 $arFilter,
                 false,
