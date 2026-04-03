@@ -6,7 +6,7 @@ use Bitrix\Main\Data\Cache;
 
 class NewsListComponent extends CBitrixComponent
 {
-    public static function clearCache($ID, $arFields)
+    public static function clearCache($arFields)
     {
         $iblockId = isset($arFields['IBLOCK_ID']) ? intval($arFields['IBLOCK_ID']) : 0;
         AddMessage2Log("ClearCache вызван", "news_cache_debug");
@@ -40,7 +40,7 @@ class NewsListComponent extends CBitrixComponent
         $cacheID = $this->getCacheID();
         $cachePath = '/news/list';
         $cacheTag = 'news_iblock_' . $this->arParams['IBLOCK_ID'];
-        
+
         $result['CACHED'] = false;
         if ($cache->initCache($this->arParams['CACHE_TIME'], $cacheID, $cachePath)) {
             $result = $cache->getVars();
@@ -112,7 +112,6 @@ class NewsListComponent extends CBitrixComponent
             
             $cache->endDataCache($result);
         }
-
         return $result;
     }
 
