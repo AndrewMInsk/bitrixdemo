@@ -1,15 +1,15 @@
 <?php
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
-use Bitrix\Main\Loader;
 use Bitrix\Main\Data\Cache;
+use Bitrix\Main\Loader;
 
 class NewsListComponent extends CBitrixComponent
 {
     public static function clearCache($arFields)
     {
         $iblockId = isset($arFields['IBLOCK_ID']) ? intval($arFields['IBLOCK_ID']) : 0;
-        AddMessage2Log("ClearCache вызван", "news_cache_debug");
+        AddMessage2Log("clearCache вызван");
 
         if ($iblockId > 0) {
             $cacheTag = 'news_iblock_' . $iblockId;
