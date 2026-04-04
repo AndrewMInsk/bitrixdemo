@@ -85,8 +85,7 @@ class NewsListComponent extends CBitrixComponent
                 $arFilter,
                 false,
                 array(
-                    'nPageSize' => 9,
-                    'bShowAll' => false
+                    'nPageSize' => 4
                 ),
                 $arSelect
             );
