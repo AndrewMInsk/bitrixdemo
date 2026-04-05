@@ -155,8 +155,13 @@ class NewsListComponent extends CBitrixComponent
 
 
             if (empty($this->arParams['IBLOCK_ID'])) {
-                ShowError('Необходимо указать ID инфоблока');
-                return;
+                throw new Exception('Необходимо указать ID инфоблока');
+            }
+            else{
+                $rsIBlock = CIBlock::GetByID($this->arParams['IBLOCK_ID']);
+                if (!$rsIBlock->Fetch()) {
+                    throw new Exception('Инфоблок не найден');
+                }
             }
 
             $this->arResult = $this->getNewsList();
