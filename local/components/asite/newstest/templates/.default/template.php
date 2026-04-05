@@ -27,8 +27,15 @@ if (empty($arResult['ITEMS'])) {
                     <input type="date" name="date_to" value="<?= htmlspecialchars($_GET['date_to'] ?? '') ?>">
                 </div>
                 <div class="filter-item">
-                    <label>ID раздела</label>
-                    <input type="text" name="section_id" value="<?= htmlspecialchars($_GET['section_id'] ?? '') ?>" placeholder="ID раздела">
+                    <label>Раздел</label>
+                    <select name="section_id">
+                        <option value="">Все разделы</option>
+                        <?php foreach ($arResult['SECTIONS'] as $id => $name): ?>
+                            <option value="<?= $id ?>" <?= ($_GET['section_id'] ?? '') == $id ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($name) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 <div class="filter-item">
                     <label>Название</label>
@@ -54,8 +61,8 @@ if (empty($arResult['ITEMS'])) {
                     <div class="news-date"><?= $item['DATE_ACTIVE_FROM'] ?></div>
                     <div class="news-preview"><?= htmlspecialchars($item['PREVIEW_TEXT']) ?></div>
                     <div class="news-section">
-                        Раздел: 
-                        <a href="#"><?= htmlspecialchars($item['IBLOCK_SECTION_ID']) ?></a>
+                        Раздел:
+                        <a href="#"><?= htmlspecialchars($item['SECTION_NAME'] ?? '') ?></a>
                     </div>
                     <div class="news-author">
                         Автор: 

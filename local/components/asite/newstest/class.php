@@ -2,7 +2,6 @@
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
 use Bitrix\Main\Data\Cache;
-use Bitrix\Main\Loader;
 
 class NewsListComponent extends CBitrixComponent
 {
@@ -32,6 +31,26 @@ class NewsListComponent extends CBitrixComponent
     public function getCacheID($additionalCacheID = false)
     {
         return md5(serialize($this->arParams) . $this->getTemplateName());
+    }
+
+    protected function getSections()
+    {
+        $sections = [];
+        $rsSections = CIBlockSection::GetList(
+            ['SORT' => 'ASC', 'NAME' => 'ASC'],
+            [
+                'IBLOCK_ID' => $this->arParams['IBLOCK_ID'],
+                'DEPTH_LEVEL' => 1,
+            ],
+            false,
+            ['ID', 'NAME']
+        );
+        
+        while ($arSection = $rsSections->GetNext()) {
+            $sections[$arSection['ID']] = $arSection['NAME'];
+        }
+        
+        return $sections;
     }
 
     protected function getNewsList()
@@ -64,12 +83,18 @@ class NewsListComponent extends CBitrixComponent
                 'ACTIVE' => 'Y',
                 'CHECK_PERMISSIONS' => 'Y'
             );
-
+            // Конвертация дат из формата Y-m-d в формат Битрикса
             if (!empty($_GET['date_from'])) {
-                $arFilter['>=DATE_ACTIVE_FROM'] = $_GET['date_from'];
+                $date = DateTime::createFromFormat('Y-m-d', $_GET['date_from']);
+                if ($date) {
+                    $arFilter['>=DATE_ACTIVE_FROM'] = $date->format('d.m.Y');
+                }
             }
             if (!empty($_GET['date_to'])) {
-                $arFilter['<=DATE_ACTIVE_FROM'] = $_GET['date_to'];
+                $date = DateTime::createFromFormat('Y-m-d', $_GET['date_to']);
+                if ($date) {
+                    $arFilter['<=DATE_ACTIVE_FROM'] = $date->format('d.m.Y');
+                }
             }
             if (!empty($_GET['section_id'])) {
                 $arFilter['SECTION_ID'] = $_GET['section_id'];
@@ -89,16 +114,23 @@ class NewsListComponent extends CBitrixComponent
                 ),
                 $arSelect
             );
-
             while ($ob = $res->GetNextElement()) {
                 $arFields = $ob->GetFields();
                 $arFields['PREVIEW_PICTURE'] = CFile::GetFileArray($arFields['PREVIEW_PICTURE']);
-                $arFields['DATE_ACTIVE_FROM'] = ConvertDateTime($arFields['DATE_ACTIVE_FROM'], 'DD.MM.YYYY HH:MI:SS');
+                $arFields['DATE_ACTIVE_FROM'] = ConvertDateTime($arFields['DATE_ACTIVE_FROM'], 'DD.MM.YYYY');
                 $arFields['AUTHOR'] = CUser::GetByID($arFields['CREATED_BY'])->Fetch()['NAME'];
                 $result['ITEMS'][] = $arFields;
             }
+            
+            $sections = $this->getSections();
+            
+            foreach ($result['ITEMS'] as &$item) {
+                if (!empty($item['IBLOCK_SECTION_ID'])) {
+                    $item['SECTION_NAME'] = $sections[$item['IBLOCK_SECTION_ID']] ?? '';
+                }
+            }
 
-            $result['NAV_STRING'] = $res->GetPageNavStringEx($navComponentObject, 'Новости', '', false);
+            $result['NAV_STRING'] = $res->GetPageNavStringEx($navComponentObject, 'Новости');
 
             $result['CACHED'] = false;
             
@@ -123,6 +155,7 @@ class NewsListComponent extends CBitrixComponent
             }
 
             $this->arResult = $this->getNewsList();
+            $this->arResult['SECTIONS'] = $this->getSections();
             $this->includeComponentTemplate();
         } catch (Exception $e) {
             ShowError($e->getMessage());
