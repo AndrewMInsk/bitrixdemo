@@ -30,7 +30,10 @@ class NewsListComponent extends CBitrixComponent
 
     public function getCacheID($additionalCacheID = false)
     {
-        return md5(serialize($this->arParams) . $this->getTemplateName());
+        $additionalCacheID = serialize([
+            'page' => $_GET['PAGEN_1'] ?? 1
+        ]);
+        return md5(serialize($this->arParams) . $this->getTemplateName() . $additionalCacheID);
     }
 
     protected function getSections()
@@ -75,7 +78,7 @@ class NewsListComponent extends CBitrixComponent
                 'DATE_ACTIVE_FROM',
                 'DETAIL_PAGE_URL',
                 'IBLOCK_SECTION_ID',
-                'CREATED_BY'
+                'PROPERTY_AUTHOR'
             );
 
             $arFilter = array(
@@ -83,7 +86,6 @@ class NewsListComponent extends CBitrixComponent
                 'ACTIVE' => 'Y',
                 'CHECK_PERMISSIONS' => 'Y'
             );
-            // Конвертация дат из формата Y-m-d в формат Битрикса
             if (!empty($_GET['date_from'])) {
                 $date = DateTime::createFromFormat('Y-m-d', $_GET['date_from']);
                 if ($date) {
@@ -118,10 +120,13 @@ class NewsListComponent extends CBitrixComponent
                 $arFields = $ob->GetFields();
                 $arFields['PREVIEW_PICTURE'] = CFile::GetFileArray($arFields['PREVIEW_PICTURE']);
                 $arFields['DATE_ACTIVE_FROM'] = ConvertDateTime($arFields['DATE_ACTIVE_FROM'], 'DD.MM.YYYY');
-                $arFields['AUTHOR'] = CUser::GetByID($arFields['CREATED_BY'])->Fetch()['NAME'];
+                $arFields['AUTHOR'] = $arFields['PROPERTY_AUTHOR_VALUE'] ?? 'Аноним';
                 $result['ITEMS'][] = $arFields;
             }
-            
+            if (empty($result['ITEMS'])) {
+                $cache->abortDataCache();
+                throw new Exception('Новости не найдены');
+            }
             $sections = $this->getSections();
             
             foreach ($result['ITEMS'] as &$item) {
@@ -158,6 +163,8 @@ class NewsListComponent extends CBitrixComponent
             $this->arResult['SECTIONS'] = $this->getSections();
             $this->includeComponentTemplate();
         } catch (Exception $e) {
+            AddMessage2Log("Ошибочка " . $e->getMessage());
+
             ShowError($e->getMessage());
         }
     }
