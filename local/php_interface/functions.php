@@ -1075,13 +1075,13 @@ function replyNotificationForm(){
             if($name) {
                 if ($_FILES['replyAttachments']['error'][$key] === UPLOAD_ERR_OK) {
                     $fileArray = CFile::MakeFileArray($_FILES['replyAttachments']['tmp_name'][$key]);
-                    $fileArray['name'] = $name; // Устанавливаем оригинальное имя файла
-                    $fileArray['type'] = $_FILES['replyAttachments']['type'][$key]; // Устанавливаем тип файла
+                    $fileArray['name'] = $name;
+                    $fileArray['type'] = $_FILES['replyAttachments']['type'][$key];
 
-                    $fileId = CFile::SaveFile($fileArray, "upload/tmp/"); // "my_folder" - имя папки для хранения файлов
+                    $fileId = CFile::SaveFile($fileArray, "upload/tmp/");
 
                     if ($fileId > 0) {
-                        $fileIds[] = \CFile::MakeFileArray($fileId); // Добавляем ID файла в массив
+                        $fileIds[] = \CFile::MakeFileArray($fileId);
                     } else {
                         echo "Ошибка загрузки файла: $name.";
                     }
@@ -1092,7 +1092,6 @@ function replyNotificationForm(){
         }
     }
 
-    // Добавляем запись
     $data = [
         'UF_AUTHOR' => $parentRow['UF_AUTHOR'],
         'UF_SUBJECT' => $subject ?: 'Re: ',
@@ -1396,4 +1395,58 @@ function personalFormSave() {
 
 function custom_mail($to, $subject, $message, $additional_headers, $additional_parameters, $context){
 	return @mail($to, $subject, $message);
+}
+
+function apiAuthLogin() {
+    try {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return ['success' => false, 'msg' => 'Метод не поддерживается. Используйте POST'];
+        }
+
+        global $USER;
+
+        $login = $_POST['login'] ?? '';
+        $password = $_POST['password'] ?? '';
+        if (empty($login)) {
+            return ['success' => false, 'msg' => 'Логин не указан'];
+        }
+        if (empty($password)) {
+            return ['success' => false, 'msg' => 'Пароль не указан'];
+        }
+        $USER->Login($login, $password);
+
+        if ($USER->IsAuthorized()) {
+            return [
+                'success' => true,
+                'msg' => 'Авторизация успешна',
+                'user' => [
+                    'id' => $USER->GetID(),
+                ]
+            ];
+        } else {
+
+            return [
+                'success' => false,
+                'msg' => 'Неверный логин или пароль'
+            ];
+        }
+    } catch (Exception $e) {
+        return ['success' => false, 'msg' => 'Ошибка сервера: ' . $e->getMessage()];
+    }
+}
+
+function apiAuthCheck() {
+    try {
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+            return ['success' => false, 'msg' => 'Метод не поддерживается. Используйте GET'];
+        }
+
+        global $USER;
+
+        return [
+            'authorized' => $USER->IsAuthorized()
+        ];
+    } catch (Exception $e) {
+        return ['success' => false, 'msg' => 'Ошибка сервера: ' . $e->getMessage()];
+    }
 }
